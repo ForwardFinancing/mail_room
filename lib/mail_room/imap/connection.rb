@@ -47,7 +47,7 @@ module MailRoom
         idle
 
         process_mailbox
-      rescue Net::IMAP::Error, IOError => e
+      rescue Net::IMAP::Error, IOError, Errno::ECONNRESET => e
         @mailbox.logger.warn({ context: @mailbox.context, action: 'Disconnected. Resetting...', error: e.message })
         reset
         setup
