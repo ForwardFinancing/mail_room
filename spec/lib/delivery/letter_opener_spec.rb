@@ -14,12 +14,14 @@ describe MailRoom::Delivery::LetterOpener do
 
     it 'creates a new LetterOpener::DeliveryMethod' do
       ::LetterOpener::DeliveryMethod.expects(:new).with(location: '/tmp/somewhere').returns(delivery_method)
+      delivery_method.expects(:deliver!).with(mail)
 
       MailRoom::Delivery::LetterOpener.new(mailbox).deliver('a message')
     end
 
     it 'parses the message string with Mail' do
-      ::Mail.expects(:read_from_string).with('a message')
+      ::Mail.expects(:read_from_string).with('a message').returns(mail)
+      delivery_method.expects(:deliver!).with(mail)
 
       MailRoom::Delivery::LetterOpener.new(mailbox).deliver('a message')
     end

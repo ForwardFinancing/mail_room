@@ -35,6 +35,9 @@ module MailRoom
       def deliver(message)
         item = item_for(message)
 
+        # ensure queue is in the set of queues so it's visible in sidekiq web portal
+        # see Sidekiq::Client.atomic_push
+        client.sadd("queues", [options.queue])
         client.lpush("queue:#{options.queue}", JSON.generate(item))
 
         @options.logger.info({ delivery_method: 'Sidekiq', action: 'message pushed' })
