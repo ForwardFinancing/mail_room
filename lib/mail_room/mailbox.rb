@@ -213,6 +213,8 @@ module MailRoom
       when nil, ""
         nil
       when :stdout, "STDOUT"
+        # if we're logging to stdout, disable buffering
+        $stdout.sync = true
         STDOUT
       when :stderr, "STDERR"
         STDERR
